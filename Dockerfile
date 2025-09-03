@@ -1,26 +1,26 @@
-# Stage 1: Build the application with JDK 24
-# Use a Maven image with OpenJDK 24 to build the project.
-FROM maven:3.9.5-openjdk-24 AS build
+# Stage 1: Build the application
+# Use a Maven image that includes JDK 17 to build the project.
+FROM maven:3.8.2-openjdk-17 AS build
 
 # Set the working directory inside the container.
 WORKDIR /app
 
-# Copy the entire project into the container.
-COPY . .
+# Copy the pom.xml and the rest of the project files.
+COPY pom.xml .
+COPY src ./src
 
 # Build the project, skipping tests to make the build faster.
-# This creates the executable JAR file in the 'target' directory.
 RUN mvn clean package -DskipTests
 
 # Stage 2: Create the final production-ready image
-# Use a smaller JRE-only image for the final application, based on JDK 24.
-FROM openjdk:24-jre-slim
+# Use a smaller JRE-only image for the final application.
+FROM openjdk:17-jre-slim
 
 # Set the volume for temporary files.
 VOLUME /tmp
 
-# Copy the built JAR file from the 'build' stage into this new, smaller image.
-# The JAR file is typically named artifactId-version.jar.
+# Copy the built JAR file from the 'build' stage into this new image.
+# The JAR file is typically found in the target/ directory for Maven.
 COPY --from=build /app/target/*.jar app.jar
 
 # Expose the default port for a Spring Boot application.
