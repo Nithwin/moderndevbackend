@@ -1,6 +1,6 @@
 # Stage 1: Build the application with JDK 24
-# Use a Maven image with OpenJDK 24 to build the project.
-FROM maven:3.9.5-openjdk-24 AS build
+# Use a Maven image with a JDK 24 base. The `eclipse-temurin` images are official and reliable.
+FROM maven:3.9.6-eclipse-temurin-24 AS build
 
 # Set the working directory inside the container.
 WORKDIR /app
@@ -13,7 +13,7 @@ RUN mvn clean package -DskipTests
 
 # Stage 2: Create the final production-ready image
 # Use a smaller JRE-only image for the final application, based on JDK 24.
-FROM openjdk:24-jre-slim
+FROM eclipse-temurin:24-jre-alpine
 
 # Set the volume for temporary files.
 VOLUME /tmp
