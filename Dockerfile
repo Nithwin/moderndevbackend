@@ -26,5 +26,5 @@ COPY --from=build /app/target/*.jar app.jar
 # Expose the default port for a Spring Boot application.
 EXPOSE 8080
 
-# Define the command to run the application when the container starts.
+
 ENTRYPOINT ["java","-jar","/app.jar"]
