@@ -1,6 +1,9 @@
 # Stage 1: Build the application with JDK 24
-# Use a Maven image with a JDK 24 base. The `eclipse-temurin` images are official and reliable.
-FROM maven:3.9.6-eclipse-temurin-24 AS build
+# Use a Maven base image. This image doesn't include a specific JDK, so we install one.
+FROM maven:3.9.6-slim AS build
+
+# Install a valid JDK 24. The `eclipse-temurin` repository is a reliable source.
+RUN apt-get update && apt-get install -y --no-install-recommends openjdk-24-jdk
 
 # Set the working directory inside the container.
 WORKDIR /app
